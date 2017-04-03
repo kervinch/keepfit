@@ -21,7 +21,7 @@
     <meta name="msapplication-tap-highlight" content="no">
 
     <!-- Your app title -->
-    <title>My App</title>
+    <title>Keepfit GO</title>
 
     <!-- This template defaults to the iOS CSS theme. To support both iOS and material design themes, see the Framework7 Tutorial at the link below:
         http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-themes-in-single-app.html
@@ -56,7 +56,13 @@ body {
     <!-- Left panel with reveal effect-->	
     <div class="panel panel-left panel-reveal">
         <div class="content-block">
-            <p>Profile name goes here.</p>
+            <p>Our upload function require a unique account code to identify a user.</p>
+			<p>You are given such code when you register on our website - keepfit.000webhostapp.com</p>
+			<!-- <form action=""> -->
+<p>Input account code here (check your unique code on our website):</p>
+<input type="text" name="code" id="kodo" value="https://api.myjson.com/bins/"><br>
+<!-- <input type="submit" value="Submit"> 
+</form> -->
 			<!-- <a href="index.php">Sign Up</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="test.html">Login</a> -->
         </div>
     </div>
@@ -90,14 +96,15 @@ body {
                             <h1>Welcome To Keepfit GO Pedometer!</h1>
 							<p>How to use the app:</p>
 							<p>Press the <i>Start</i> button on the bottom-left to start counting your steps!</p>
-							<p>A live count displaying your steps will be shown below.
-							<p>Press the <i>Upload</i> button on the bottom-right to upload your Keepfit data to the Keepfit Web Application.</p>
+							<p>A live count displaying your steps will be shown below, along with some other calculated data.</p>
+							<p>When you are done, press the <i>pause</i> button then <i>upload</i> button on the bottom-right to send your Keepfit data to the Keepfit Web Application.</p>
 							<!-- pedometer.isStepCountingAvailable(document.write("yes"), document.write("no")); -->
 							<p id="demo"></p>
 							<p id="res"><button onClick="reset()">Reset</button></p>
 							<br>
 							
 							<script type="text/javascript">
+							
 							
 							  var watchID = null;
 							  var s = 0;
@@ -144,19 +151,6 @@ body {
 		}
 		
 		timeElapsed = timeElapsed + 0.5;
-		/* -- try to eliminate the decimal place
-		if((timeElapsed%10)/10>0)
-		{
-			timeElapsed = timeElapsed - 0.5;
-		}
-		*/
-		
-		/*
-		if(timeElapsed>5)
-		{
-		navigator.accelerometer.clearWatch(watchID);
-		}
-		*/
 		
 		
         var element = document.getElementById('demo');
@@ -166,7 +160,10 @@ body {
                             'Timestamp: '      + acceleration.timestamp + '<br />' + 
 							'Acceleration Vector: ' + accVec + '<br />' + '<br />' +
 							'Steps: ' + s + '<br />' +
-							'Time Elapsed (in seconds): ' + timeElapsed + '<br />';
+							'Time Elapsed (in seconds): ' + timeElapsed + '<br />' + 
+"Distance Covered: " + Math.round( ((s/1230)*1000) *100)/100 + " m" + '<br />' +
+"Average Speed: " + (Math.round( (((s/1230)*1000)/timeElapsed) * 100)/100) + " m/s" + '<br />' + 
+"Caloeries Burned: " + ((0.0215 * (Math.round( (((s/1230)*1000)/timeElapsed) * 100)/100) - 0.1765 * (Math.round( (((s/1230)*1000)/timeElapsed) * 100)/100) + 0.8710 * (Math.round( (((s/1230)*1000)/timeElapsed) * 100)/100) + 1.4577) * 53 * timeElapsed) + " calories"  + '<br />';
 		
 		 
 							
@@ -191,29 +188,33 @@ body {
                             'Timestamp: '      + 0 + '<br />' +
 							'Acceleration Vector: ' + 0 + '<br />' + '<br />' +
 							'Steps: ' + s + '<br />' +
-							'Time Elapsed (in seconds): ' + timeElapsed + '<br />';
+							'Time Elapsed (in seconds): ' + timeElapsed + '<br />' ;
+
 	}
 	
 	function upload()
 	{
+		var lnk = document.getElementById('kodo').value;
+	
 		var obj = {
-    "s": "value",
-    "te": "value2"
-};
+		"s": "value",
+		"te": "value2"
+		};
 
-var data = JSON.stringify(obj);
-            var updatedObj = {
-                "s": s,
-                "te": timeElapsed
-            };
-            var updatedData = JSON.stringify(updatedObj);
+		var data = JSON.stringify(obj);
+		var updatedObj = {
+             "s": s,
+             "te": timeElapsed
+         };
+		 
+         var updatedData = JSON.stringify(updatedObj);
 			
-			alert("uploading . . .");
-			
+		alert("uploading . . .");
+			//keyword: dm0or for testing purpose
             // do update
 			try {
             $.ajax({
-                url: "https://api.myjson.com/bins/dm0or",
+                url: lnk,
                 type: "PUT",
                 data: updatedData,
                 contentType: "application/json; charset=utf-8",
@@ -261,7 +262,6 @@ var data = JSON.stringify(obj);
 	
 	
     <script type="text/javascript" src="cordova.js"></script>
-	
     <script type="text/javascript" src="lib/framework7/js/framework7.min.js"></script>
     <script type="text/javascript" src="js/my-app.js"></script>
 </body>
